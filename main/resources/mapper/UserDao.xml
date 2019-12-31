@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace:命名空间 dao全限定类名 -->
+<mapper namespace="cn.smallChild.dao.UserDao">
+
+    <!-- 功能:查询所有用户 -->
+    <!-- id : 方法名-->
+    <!-- parameterType : 入参类型-->
+    <!-- resultType : 返回值类型-->
+
+    <!-- 查询全部用户 -->
+    <select id="getAll" resultType="User">
+       select * from user
+    </select>
+
+    <!-- 添加用户 -->
+    <select id="addUser" parameterType="User">
+       insert into user values (DEFAULT,#{username},#{password},#{name},#{email},#{phone},#{addr},#{state},#{code})
+    </select>
+
+    <!-- 查询用户名 -->
+    <select id="checkUser" resultType="Integer" parameterType="String" >
+        select count(0) from user where username = #{userName}
+    </select>
+
+    <!-- 查询用户名跟密码 -->
+    <select id="loginUser" resultType="Integer" parameterType="User" >
+        select count(0) from user where username = #{username} and password = #{password}
+    </select>
+
+    <!-- 查询用户信息 -->
+    <select id="getCheckUser" resultType="User" parameterType="String" >
+        select * from user where username = #{username}
+    </select>
+
+    <!-- 修改个人用户信息 -->
+    <update id="modifyUser" parameterType="User" >
+        update user set username = #{username},password=#{password},name=#{name},email=#{email},phone=#{phone},addr=#{addr},state=#{state},code=#{code}  WHERE uid = #{uid}
+    </update>
+
+</mapper>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为IUserDao接口方法提供sql语句配置 -->
+<mapper namespace="cn.smallChild.dao.CategoryDao">
+    <!-- resultMap:指定结果集映射规则  -->
+    <resultMap id="categoryMap" type="CategoryExt">
+
+        <!--column:指的是数据库字段-->
+        <!--property:指的是实体类的成员变量-->
+
+        <id column="cid" property="cid"></id>
+        <result column="cname" property="cname"></result>
+
+        <!--collection:指的是集合-->
+        <!--categorySeconds:指的是实体类的变量-->
+
+        <collection property="categorySeconds" ofType="CategorySecond">
+            <id column="csid" property="csid" ></id>
+            <result column = "csname" property="csname"></result>
+            <result column = "cid" property="cid"></result>
+        </collection>
+    </resultMap>
+    <select id="getAllCategory" resultMap="categoryMap">
+        select * from category
+        inner join categorysecond
+        on category.cid = categorysecond.cid
+    </select>
+</mapper>

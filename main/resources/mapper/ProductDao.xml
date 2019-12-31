@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为IUserDao接口方法提供sql语句配置 -->
+<mapper namespace="cn.smallChild.dao.ProductDao">
+
+    <resultMap id="ProductMap" type="Product">
+        <id column="pid" property="pid"></id>
+        <result column="pname" property="pname"></result>
+        <result column="market_price" property="marketPrice"></result>
+        <result column="shop_price" property="shopPrice"></result>
+        <result column="image" property="image"></result>
+        <result column="pdesc" property="pdesc"></result>
+        <result column="is_hot" property="isHot"></result>
+        <result column="pdate" property="pdate"></result>
+        <result column="csid" property="csid"></result>
+    </resultMap>
+
+    <!-- 根据二级类目查询商品 -->
+    <select id="getProductByCsid" parameterType="int" resultMap="ProductMap">
+        select * from product where csid=#{csid}
+    </select>
+
+    <!-- 按照一级类目查询商品列表 -->
+    <select id="getProductListByCid" parameterType="ProductBean" resultMap="ProductMap">
+        select * from product
+        inner join categorysecond
+        on product.csid=categorysecond.csid
+        where categorysecond.cid = #{cid}
+        limit #{start},#{pageSize}
+    </select>
+
+    <!--查后期一级类目总数 -->
+    <select id="getRowCountByCid" parameterType="ProductBean" resultType="Integer">
+        select count(0) from product
+        inner join categorysecond
+        on product.csid=categorysecond.csid
+        where categorysecond.cid = #{cid}
+    </select>
+
+
+
+    <!--  按照二级类目查询列表  -->
+    <select id="getProductListByCsid" parameterType="ProductBean" resultMap="ProductMap">
+        select * from product
+
+        <include refid="condition"></include>
+
+        limit #{start},#{pageSize}
+    </select>
+
+    <!--  按照二级类目查询列表页数  -->
+    <select id="getRowCounByCsid" parameterType="ProductBean" resultType="Integer">
+        select count(0) from product
+
+        <include refid="condition"></include>
+
+    </select>
+
+    <!-- 动态拼接 -->
+    <sql id="condition">
+        <where>
+            <if test="csid != null">
+                 and csid = #{csid}
+            </if>
+            <if test="pname != null">
+                 and pname like "%"#{pname}"%"
+            </if>
+        </where>
+    </sql>
+
+
+    <!--根据局商品id查询商品-->
+    <select id="getProductDetail" resultMap="ProductMap" resultType="Integer" >
+        select * from product  where pid = #{pid}
+    </select>
+</mapper>
